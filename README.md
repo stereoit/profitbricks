@@ -7,10 +7,10 @@ Project structure
 -----------------
 
     .
-    ├── app     		// python backend
-    │   ├── api 		// handling of /api/testruns e.g.
-	│   └── testrunner  // celery workerks for running tests
-    ├── frontend		// frontend sources
+    ├── app     		    # python backend
+    │   ├── api 	    	# handling of /api/testruns e.g.
+    │   └── testrunner  # celery workerks for running tests
+    ├── frontend		    # frontend sources
     └── README.md
 
 
@@ -59,4 +59,40 @@ Testrun
 We use `TestrunStore` which handles connection to remote store and updates it's subscribers. Its subscriber is `AppLayout` which adds props (testrun, testruns, actions) to its children (TestrunDetail, TestrunList,...).
 
 For routing we use React-Router v3. Tooling with babel, npm scripts and webpack. For UI let's try google's material design.
+
+Notes
+-----
+
+Running celery tasks
+
+    $ env PYTHONPATH=/home/rsmol/Code/git/profitbricks/app celery -A testrunner  worker --loglevel=info
+
+Testrun CRUD with curl
+
+    $ curl -H "Content-Type: application/json" -X POST --data '{"username":"Steve" }' localhost:5000/api/testrun -i
+
+    $ curl localhost:5000/api/testrun
+    {
+      "num_results": 1, 
+      "objects": [
+        {
+          "id": 1, 
+          "status": "CREATED", 
+          "username": "Steve"
+        }
+      ], 
+      "page": 1, 
+      "total_pages": 1
+    }
+
+    $ curl localhost:5000/api/testrun/1
+    {
+      "id": 1, 
+      "status": "CREATED", 
+      "username": "Steve"
+    }
+
+    $ curl -X DELETE localhost:5000/api/testrun/1 -i
+    HTTP/1.0 204 NO CONTENT
+
 
