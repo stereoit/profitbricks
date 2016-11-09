@@ -1,3 +1,9 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# javascript
 node_modules/
+
+# this is created by `npm run build`
 dist/
-*.pyc
