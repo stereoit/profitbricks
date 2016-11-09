@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, abort, request
-from flask_script import Manager
+from flask_script import Manager, Server
 
 
 app = Flask(__name__)
@@ -22,6 +22,13 @@ def add_cors_header(response):
     return response
 
 app.after_request(add_cors_header)
+
+manager.add_command("runserver", Server(
+    use_debugger = True,
+    use_reloader = True,
+    threaded = True,
+    host = '0.0.0.0')
+)
 
 if __name__ == '__main__':
 	manager.run()
