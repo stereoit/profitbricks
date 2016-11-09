@@ -1,0 +1,25 @@
+version: "2"
+
+services:
+  rabbitdata:
+    image: tianon/true
+    container_name: rbt-data
+    volumes:
+      - /var/lib/rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbit1
+    container_name: rabbitmq-db
+    ports:
+      - "5671:5671"
+      - "5672:5672"
+      - "15672:15672"
+    volumes_from:
+      - rabbitdata
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    container_name: redis
