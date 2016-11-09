@@ -1,0 +1,33 @@
+// simple stylinging done via Sass
+$brand-primary: #26b9da;
+$hawkeyBlue: rgb(227, 242, 253);
+
+
+/* I use Susy for CSS grids */
+@import "../../node_modules/susy/sass/susy";
+$susy: (
+  columns: 12,
+  container: 1120px, // 70rem
+  global-box-sizing: border-box
+);
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+
+.page-content {
+  @include container;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+$tablet: 768px;
+
+.usecase-card {
+  margin-bottom: gutter();
+  @media screen and (min-width: $tablet) {
+    @include gallery(4 of 12);
+  }
+}
