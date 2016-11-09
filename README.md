@@ -41,7 +41,7 @@ Testrun
  - tests files
  - logs
 
- 
+
 
  Web
  ---
@@ -65,7 +65,7 @@ Notes
 
 Running celery tasks
 
-    $ env PYTHONPATH=/home/rsmol/Code/git/profitbricks/app celery -A testrunner  worker --loglevel=info
+    $ env PYTHONPATH=/home/rsmol/Code/git/profitbricks celery -A app.testrunner.celery  worker --loglevel=info
 
 Testrun CRUD with curl
 
@@ -73,26 +73,24 @@ Testrun CRUD with curl
 
     $ curl localhost:5000/api/testrun
     {
-      "num_results": 1, 
+      "num_results": 1,
       "objects": [
         {
-          "id": 1, 
-          "status": "CREATED", 
+          "id": 1,
+          "status": "CREATED",
           "username": "Steve"
         }
-      ], 
-      "page": 1, 
+      ],
+      "page": 1,
       "total_pages": 1
     }
 
     $ curl localhost:5000/api/testrun/1
     {
-      "id": 1, 
-      "status": "CREATED", 
+      "id": 1,
+      "status": "CREATED",
       "username": "Steve"
     }
 
     $ curl -X DELETE localhost:5000/api/testrun/1 -i
     HTTP/1.0 204 NO CONTENT
-
-
