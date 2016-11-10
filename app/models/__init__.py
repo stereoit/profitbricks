@@ -1,4 +1,4 @@
-from __main__ import app
+from app import app
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy(app)
@@ -25,6 +25,7 @@ class TestRun(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(80), unique=False)
 	status = db.Column(db.String(30), unique=False, default='CREATED')
+	testrunner_id = db.Column(db.String(150), unique=True)
 
 
 # ensure all tables exists
