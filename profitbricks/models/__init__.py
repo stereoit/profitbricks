@@ -12,6 +12,7 @@ class TestRun(db.Model):
 	status = db.Column(db.String(30), unique=False, default='CREATED')
 	testrunner_id = db.Column(db.String(150), unique=True)
 	testfiles = db.relationship('TestRunFile', backref='testrun',lazy='dynamic')
+	results = db.Column(db.Text, default='')
 
 
 class TestRunFile(db.Model):
