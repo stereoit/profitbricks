@@ -42,7 +42,6 @@ Testrun
  - logs
 
 
-
  Web
  ---
 
@@ -94,3 +93,41 @@ Testrun CRUD with curl
 
     $ curl -X DELETE localhost:5000/api/testrun/1 -i
     HTTP/1.0 204 NO CONTENT
+
+
+Installation
+------------
+
+ Install libcurl-dev headers:
+
+    $ sudo dnf install redhat-rpm-config libcurl-devel #on Fedora
+    $ sudo apt-get install libcurl4-openssl-dev # on Debian
+
+ Install python requirements
+
+    $ mkvirtualenv --python=/usr/bin/python3 profitbricks
+    $ workon profitbricks
+    $ pip install -r profitbricks/requirements.txt
+
+ Compile binary application.js
+
+    $ npm install -g yarn
+    $ yarn install
+    $ npm run build
+
+Running
+-------
+
+  Start docker composed images (rabbitmq and redis)
+
+    $ docker-compose up
+
+  In another window start celery background tasks
+
+    $ celery -A profitbricks.testrunner.celery  worker --loglevel=info
+
+  Start webapplication
+
+    $ python -m profitbricks.server runserver
+
+  Go to http://localhost:8080
