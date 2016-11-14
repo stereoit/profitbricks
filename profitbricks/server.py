@@ -21,7 +21,8 @@ manager.add_command("runserver", Server(
     use_debugger = True,
     use_reloader = True,
     threaded = True,
-    host = '0.0.0.0')
+    host = app.config['ADDRESS'],
+    port = app.config['PORT'])
 )
 
 # helper command to show registered routes
