@@ -1,7 +1,7 @@
 TestRunner
 ==========
 
-Platform for running batches of tests. Please se [Notes](#notes) for more information.
+Platform for running batches of tests. Please se Notes for more information.
 
 
 Installation
@@ -21,7 +21,7 @@ Installation
 
  Compile binary application.js
 
-    $ npm install -g yarn
+    $ sudo npm install -g yarn
     $ yarn install
     $ npm run build
 
@@ -48,12 +48,18 @@ Running
 Project structure
 -----------------
 
-    .
-    ├── app     		    # python backend
-    │   ├── api 	    	# handling of /api/testruns e.g.
-    │   └── testrunner  # celery workerks for running tests
-    ├── frontend		    # frontend sources
-    └── README.md
+.
+├── dist  # compiled frontend part
+├── frontend  # fronted app sources
+├── profitbricks  # python application
+├── sample_test_files #two sample pytest files, one failes another success
+├── uploads  # folder for uploads
+├── package.json
+├── README.md
+├── docker-compose.yml
+├── webpack.config.js
+└── yarn.lock
+
 
 
 Design
@@ -95,11 +101,18 @@ We use `TestrunStore` which handles connection to remote store and updates it's 
 For routing we use React-Router v3. Tooling with babel, npm scripts and webpack. For UI let's try google's material design.
 
 
-Notes  {#notes}
+Notes  
 -----
+
+So, thank you for sharing this task with me. It was actually way harder than I anticipated.
+
+Initially I've done some paper work on how to design this and came to conclusion I either do not understand the test environment or it is too complicated. So I decided to use some distributed queue to resolve this. The good part here is one can scale this up just by starting more workers (even on distributed machines). At the beginning I've tried to design loosely coupled system as much as possible.
+
+During coding I ran into problem with failing to upload files over REST, so I had to refactor quite a bit to used regular POST form via AJAX.
+
 Backend s written in Flask + SQLAlchemy + Flask-Restless + Celery. When new
 Testrun is created, we call Celery defined task (TestRunner) for execting the test.
 
 The TestRunner connects over API to fetch details about the Testrun, set it to RUNNING, then executes the Testrun tests, and stores back the results over API again.
 
-The number of TestRunner workers influences the speed of execution of tests.
+The code really reflects my current status. No tests for my app, probably not the cleanest code (but it works and time is up). I would love to improve in this area. I've basically plumbered the components I know about together for a solution. I would need much more time to have something polished and production ready.
