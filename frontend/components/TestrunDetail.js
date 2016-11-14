@@ -33,6 +33,9 @@ const TestrunDetail = ({params, testrunStore}) => {
         </div>
         : null
       }
+      <div style={{'whiteSpace': 'pre-line'}}>
+        {testrun.results}
+      </div>
     </Paper>
   )
 }
