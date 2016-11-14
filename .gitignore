@@ -7,3 +7,7 @@ node_modules/
 
 # this is created by `npm run build`
 dist/
+
+#uploaded files
+profitbricks/uploads/
+

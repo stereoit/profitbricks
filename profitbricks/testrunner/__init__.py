@@ -6,8 +6,8 @@ from celery import Celery
 from celery.signals import worker_init
 from flask import jsonify
 
-from app import app
-from app.models import db, TestRun
+from profitbricks import app
+from profitbricks.models import db, TestRun
 
 celery = Celery(
     app.name,
@@ -30,8 +30,10 @@ def test_runner(self, testrun_id):
     For simplicity yet I am returning simple value.
     """
     testrun = TestRun.query.get(testrun_id)
+
     if testrun is None:
         return { 'status': 'Failed', 'error': "TestRun not found"}
+
     testrun.status = 'RUNNIG'
     db.session.add(testrun)
     db.session.commit()
@@ -63,3 +65,22 @@ def test_runner(self, testrun_id):
     db.session.commit()
 
     return {'current': 100, 'total': 100, 'status': 'Task completed!', 'result': 42}
+
+
+def start_testrunner(testrun_id):
+	'''
+	Start new testrunner, returls async id
+	'''
+	testrun = TestRun.query.get(testrun_id)
+	if testrun is None:
+		return #something happened, we do not have object in db
+
+	#let's add 20 seconds delay to simulate some load
+	task = test_runner.apply_async(args=[testrun.id], countdown=20)
+
+	# store back to DB the session task
+	testrun.testrunner_id = task.id
+	db.session.add(testrun)
+	db.session.commit()
+
+	return task

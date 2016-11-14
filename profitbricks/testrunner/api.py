@@ -1,6 +1,6 @@
 from flask import jsonify
-from app import app
-from app.models import TestRun
+from profitbricks import app
+from profitbricks.models import TestRun
 from . import test_runner
 
 

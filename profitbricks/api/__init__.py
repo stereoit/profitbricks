@@ -1,24 +1,18 @@
 import flask_restless as restless
-from app import app
-from models import db, TestRun
-from app.testrunner import test_runner
+from profitbricks import app
+from profitbricks.models import db, TestRun
+from profitbricks.testrunner import start_testrunner
 
-def start_testrunner(result=None, **kw):
+# This is actually not used, I have another login in uploads module
+def testrunner_post(result=None, **kw):
 	'''
 	When new Testrun is created ('POST') start_testrunner will
 	start Celery task for execute the tests themselves.
 	'''
-	testrun = TestRun.query.get(result['id'])
-	if testrun is None:
-		return #something happened, we do not have object in db
+	if result == None:
+		return
 
-	#let's add 20 seconds delay to simulate some load
-	task = test_runner.apply_async(args=[result["id"]], countdown=20)
-
-	# store back to DB the session task
-	testrun.testrunner_id = task.id
-	db.session.add(testrun)
-	db.session.commit()
+	task = start_testrunner(testrun)
 
 	#patch result to include information about task
 	result["testrunner_id"] = task.id
