@@ -32,7 +32,11 @@ module.exports = env => {
     devServer: {
       proxy: {
         '/api': {
-          target: 'http://localhost:8081',
+          target: 'http://localhost:5000',
+          secure: false
+        },
+        '/newTestrun': {
+          target: 'http://localhost:5000',
           secure: false
         }
       }
