@@ -26,7 +26,10 @@ celery.conf.update(app.config) # this takes care of `backend`
 @celery.task(bind=True)
 def test_runner(self, testrun_id):
     testrun = TestRun.query.get(testrun_id)
-    server_url = 'http://localhost:5000/_uploads/testfiles/' #hardcoded for now
+
+    # hardcoded for now
+    # i think this can be sorted with app context
+    server_url = 'http://localhost:8080/_uploads/testfiles/'
 
     if testrun is None:
         return { 'status': 'Failed', 'error': "TestRun not found"}
