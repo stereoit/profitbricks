@@ -11,3 +11,5 @@ dist/
 #uploaded files
 profitbricks/uploads/
 
+
+.cache/
