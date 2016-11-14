@@ -10,6 +10,7 @@ import TestrunStore from '../remote/testrunStore';
 
 const OVERVIEW_LABEL = "Testruns overview"
 const ADDNEW_LABEL = "Add new Testrun"
+const DETAIl_LABEL = "Testrun detail"
 
 const styles = {
   title: {
@@ -28,12 +29,11 @@ class AppContainer extends Component {
   constructor(props){
     super(props)
 
-    let remoteURL = "//localhost:5000/api";
+    let remoteURL = "/api";
     this.store = new TestrunStore(remoteURL)
 
     this.state = {
       testruns: [],
-      title: OVERVIEW_LABEL,
       loading: true,
       snackbarOpen: false,
       snackbarMessage: ""
@@ -42,6 +42,7 @@ class AppContainer extends Component {
     // autobinding hacks
     this.updateTestruns = this.updateTestruns.bind(this)
     this.addTestrun = this.addTestrun.bind(this)
+    this.onAddTestrun = this.onAddTestrun.bind(this)
     this.addTestrunCancel = this.addTestrunCancel.bind(this)
     this.handleTouchAdd = this.handleTouchAdd.bind(this)
     this.handleCloseSnackbar = this.handleCloseSnackbar.bind(this)
@@ -60,31 +61,47 @@ class AppContainer extends Component {
       return React.cloneElement(c, {
         testruns: this.state.testruns,
         loading: this.state.loading,
-        onAddTestrun: this.addTestrun,
-        onAddTestrunCancel: this.addTestrunCancel
+        onAddTestrun: this.onAddTestrun,
+        onAddTestrunCancel: this.addTestrunCancel,
+        testrunStore: this.store
       });
     })
   }
 
-  // lets load testruns when mounted
+  // lets load testruns when mounted and then fetch periodically
   componentDidMount() {
     this.store.fetchTestruns()
+    let intervalID = setInterval(this.store.fetchTestruns, 4000)
+    this.setState({'intervalID': intervalID})
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.intervalID)
   }
 
   // allows adding of testruns
+  // NOT used this version due to AJAX FileUploads
   addTestrun(testrun) {
     this.store.saveTestrun(testrun)
     this.setState({
-      "title": OVERVIEW_LABEL,
       "snackbarOpen": true,
       "snackbarMessage": `Testrun ${testrun.username} added`
     })
     this.props.router.push('/');
   }
 
+  // simple function called after the form with data has been uploaded
+  onAddTestrun() {
+    this.store.fetchTestruns()
+    this.setState({
+      "snackbarOpen": true,
+      "snackbarMessage": `New Testrun added`
+    })
+    this.props.router.push('/');
+  }
+
   // allows adding of testruns
   addTestrunCancel() {
-    this.setState({"title": OVERVIEW_LABEL})
     this.props.router.push('/');
   }
 
@@ -100,8 +117,14 @@ class AppContainer extends Component {
 
   // handles Adde New Testrun button
   handleTouchAdd() {
-    this.setState({"title": ADDNEW_LABEL})
-    this.props.router.push('/addTestrun');
+     switch (location.pathname) {
+       case '/':
+        this.props.router.push('/addTestrun');
+        break;
+      default:
+        this.props.router.push('/');
+    }
+
   }
 
   handleCloseSnackbar() {
@@ -110,15 +133,36 @@ class AppContainer extends Component {
     });
   }
 
+
+
   render() {
-    const {title, snackbarOpen, snackbarMessage} = this.state
+    const {snackbarOpen, snackbarMessage} = this.state
+    const {location} = this.props
+
+    let elRightLabel = ''
+      , title = ''
+    switch (location.pathname) {
+      case '/':
+        elRightLabel = 'Add Testrun'
+        title = OVERVIEW_LABEL
+        break;
+      case '/addTestrun':
+        title = ADDNEW_LABEL
+        elRightLabel = 'Overview'
+        break;
+      default:
+        title = DETAIl_LABEL
+        elRightLabel = 'Overview'
+    }
+
+
     return (
       <MuiThemeProvider>
         <div>
           <AppBar
             title={<span style={styles.title}>{title}</span>}
             onRightIconButtonTouchTap={this.handleTouchAdd}
-            iconElementRight={<FlatButton label="Add Testrun" />}
+            iconElementRight={<FlatButton label={elRightLabel} />}
             showMenuIconButton={false}
             style={styles.appbar}
           />

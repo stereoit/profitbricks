@@ -7,7 +7,9 @@ import AppBar from 'material-ui/AppBar';
 
 import AppContainer from './containers/AppContainer';
 import TestrunList from './components/TestrunList';
-import TestrunAdd from './components/TestrunAdd';
+// import TestrunAdd from './components/TestrunAdd';
+import TestrunForm from './components/TestrunForm';
+import TestrunDetail from './components/TestrunDetail';
 import NoMatch from './components/NoMatch';
 
 
@@ -16,11 +18,11 @@ import NoMatch from './components/NoMatch';
 injectTapEventPlugin();
 
 
-
 const routes =
   <Route path="/" component={AppContainer}>
     <IndexRoute component={TestrunList} />
-    <Route path="addTestrun" component={TestrunAdd} />
+    <Route path="addTestrun" component={TestrunForm} />
+    <Route path="detail/:testrunID" component={TestrunDetail} />
     <Route path="*" component={NoMatch} />
   </Route>
 

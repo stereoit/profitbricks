@@ -8,29 +8,53 @@ import {
   TableRowColumn
 } from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+
+import ForwardIcon from 'material-ui/svg-icons/content/forward';
+
 
 import TestrunRow from './TestrunRow';
 
-const TestrunList = ({loading, testruns}) => {
+const styles = {
+  th: {
+    width: '50px',
+  }
+};
+
+
+const TestrunList = ({loading, testruns, router}) => {
   if (loading) {
     return <div>Loading...</div>
+  }
+  if (testruns.length == 0) {
+    return <div>Please create a Testrun...</div>
   }
   return (
     <Paper className="testruns">
       <Table selectable={true}>
-        <TableHeader>
+        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
           <TableRow>
-            <TableHeaderColumn>ID</TableHeaderColumn>
+            <TableHeaderColumn style={styles.th} >ID</TableHeaderColumn>
             <TableHeaderColumn>Username</TableHeaderColumn>
             <TableHeaderColumn>Status</TableHeaderColumn>
+            <TableHeaderColumn></TableHeaderColumn>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody displayRowCheckbox={false}>
           {testruns.map( (testrun, index) => (
 								<TableRow key={index}>
-						      <TableRowColumn>{testrun.id}</TableRowColumn>
+						      <TableRowColumn style={styles.th}>{testrun.id}</TableRowColumn>
 						      <TableRowColumn>{testrun.username}</TableRowColumn>
 						      <TableRowColumn>{testrun.status}</TableRowColumn>
+                  <TableRowColumn>
+                    <FlatButton
+                      label="Details"
+                      secondary={true}
+                      onClick={() => router.push(`detail/${testrun.id}`)}
+                      labelPosition="after"
+                    />
+                  </TableRowColumn>
 						    </TableRow>
 							)
 					)}

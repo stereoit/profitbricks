@@ -13,6 +13,7 @@ class TestrunStore  {
 		this.subscribers = []
 
 		this.notify = this.notify.bind(this)
+		this.fetchTestruns = this.fetchTestruns.bind(this)
 		// console.log("TestrunStore initialized")
 	}
 
@@ -37,7 +38,7 @@ class TestrunStore  {
 	fetchTestruns() {
 		// console.log("fetchTestruns called");
 		let store = this
-		fetch(this.remoteURL + '/testrun')
+		fetch(this.remoteURL + '/testruns')
 			.then( response => {
 				response.json().then( json => {
 					let testruns = json.objects
@@ -56,7 +57,7 @@ class TestrunStore  {
 		let store = this
 		  , testruns = this.testruns
 
-		fetch(this.remoteURL + '/testrun', {
+		fetch(this.remoteURL + '/testruns', {
 			method: 'POST',
 			mode: 'cors',
 			redirect: 'follow',
