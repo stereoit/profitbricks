@@ -48,7 +48,6 @@ def test_runner(self, testrun_id):
         tmpdir = tempfile.mkdtemp()
         filename = testfile.url.split('/')[1]
         filepath = os.path.join(tmpdir,filename)
-        print(filepath)
 
         r = requests.get(server_url + testfile.url)
         if r.status_code == 200:

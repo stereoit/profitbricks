@@ -1,5 +1,4 @@
 import os
-print(__file__)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 publicdir = os.path.abspath(os.path.join(basedir, '..'))

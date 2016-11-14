@@ -1,7 +1,49 @@
 TestRunner
 ==========
 
-Platform for running batches of tests.
+Platform for running batches of tests. Please se [Notes](#notes) for more information.
+
+
+Installation
+------------
+
+ Clone repository
+
+    $ git clone git@github.com:stereoit/profitbricks.git
+
+ Install python requirements
+
+    $ mkvirtualenv --python=/usr/bin/python3 profitbricks
+    $ cd profitbricks
+    $ workon profitbricks
+    $ export PYTHONPATH=`pwd`
+    $ pip install -r profitbricks/requirements.txt
+
+ Compile binary application.js
+
+    $ npm install -g yarn
+    $ yarn install
+    $ npm run build
+
+
+Running
+-------
+
+  Start docker composed images (rabbitmq and redis)
+
+    $ docker-compose up
+
+  In another window start celery background tasks
+
+    $ celery -A profitbricks.testrunner.celery  worker --loglevel=info
+
+  Start webapplication
+
+    $ python -m profitbricks.server runserver
+
+  Go to http://localhost:8080
+
+
 
 Project structure
 -----------------
@@ -19,16 +61,9 @@ Design
 
 In the web console one can:
 
+- view list of Testruns (with statuses)
  - create new Testrun (username, set of tests)
- - view list of Testruns (with statues)
  - view in detail one Testrun (logs)
-
-Backend s written in Flask + SQLAlchemy + Flask-Restless + Celery. When new
-Testrun is created, we call Celery defined task (TestRunner) for execting the test.
-
-The TestRunner connects over API to fetch details about the Testrun, set it to RUNNING, then executes the Testrun tests, and stores back the results over API again.
-
-The number of TestRunner workers influences the speed of execution of tests.
 
 
 Domain
@@ -59,75 +94,12 @@ We use `TestrunStore` which handles connection to remote store and updates it's 
 
 For routing we use React-Router v3. Tooling with babel, npm scripts and webpack. For UI let's try google's material design.
 
-Notes
+
+Notes  {#notes}
 -----
+Backend s written in Flask + SQLAlchemy + Flask-Restless + Celery. When new
+Testrun is created, we call Celery defined task (TestRunner) for execting the test.
 
-Running celery tasks
+The TestRunner connects over API to fetch details about the Testrun, set it to RUNNING, then executes the Testrun tests, and stores back the results over API again.
 
-    $ env PYTHONPATH=/home/rsmol/Code/git/profitbricks celery -A app.testrunner.celery  worker --loglevel=info
-
-Testrun CRUD with curl
-
-    $ curl -H "Content-Type: application/json" -X POST --data '{"username":"Steve" }' localhost:5000/api/testrun -i
-
-    $ curl localhost:5000/api/testrun
-    {
-      "num_results": 1,
-      "objects": [
-        {
-          "id": 1,
-          "status": "CREATED",
-          "username": "Steve"
-        }
-      ],
-      "page": 1,
-      "total_pages": 1
-    }
-
-    $ curl localhost:5000/api/testrun/1
-    {
-      "id": 1,
-      "status": "CREATED",
-      "username": "Steve"
-    }
-
-    $ curl -X DELETE localhost:5000/api/testrun/1 -i
-    HTTP/1.0 204 NO CONTENT
-
-
-Installation
-------------
-
- Install libcurl-dev headers:
-
-    $ sudo dnf install redhat-rpm-config libcurl-devel #on Fedora
-    $ sudo apt-get install libcurl4-openssl-dev # on Debian
-
- Install python requirements
-
-    $ mkvirtualenv --python=/usr/bin/python3 profitbricks
-    $ workon profitbricks
-    $ pip install -r profitbricks/requirements.txt
-
- Compile binary application.js
-
-    $ npm install -g yarn
-    $ yarn install
-    $ npm run build
-
-Running
--------
-
-  Start docker composed images (rabbitmq and redis)
-
-    $ docker-compose up
-
-  In another window start celery background tasks
-
-    $ celery -A profitbricks.testrunner.celery  worker --loglevel=info
-
-  Start webapplication
-
-    $ python -m profitbricks.server runserver
-
-  Go to http://localhost:8080
+The number of TestRunner workers influences the speed of execution of tests.
