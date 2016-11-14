@@ -4,9 +4,12 @@ import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
   FormsySelect, FormsyText, FormsyTime, FormsyToggle } from 'formsy-material-ui/lib';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
+import FileInput from './FileInput';
 
 
 
+// I did not managed to push FileUploads using this
+// possible clues https://github.com/christianalfoni/formsy-react/issues/126
 class TestrunAdd extends Component {
   constructor(props) {
     super(props)
@@ -47,13 +50,14 @@ class TestrunAdd extends Component {
         <CardText>
           <Formsy.Form ref="form" onValidSubmit={this.submit} onValid={this.enableButton} onInvalid={this.disableButton}>
           <FormsyText
-            name="username"
+            name="Username"
             validations="isWords"
             validationError={"Please only use letters"}
             required
             hintText="Requester"
             floatingLabelText="username"
           />
+        <FileInput validations="isTrue" />
         </Formsy.Form>
         </CardText>
         <CardActions>
